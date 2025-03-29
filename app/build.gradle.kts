@@ -44,6 +44,9 @@ android {
 dependencies {
 
     implementation(project(":feature:home"))
+    implementation(project(":feature:products"))
+    implementation(project(":feature:favorites"))
+    implementation(project(":feature:settings"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

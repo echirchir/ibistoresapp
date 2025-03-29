@@ -10,7 +10,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import dev.chirchir.feature.favorites.navigation.FavoritesFeature
+import dev.chirchir.feature.favorites.navigation.favoritesFeatureNavGraph
 import dev.chirchir.feature.home.navigation.homeFeatureNavGraph
+import dev.chirchir.feature.products.navigation.ProductsFeature
+import dev.chirchir.feature.products.navigation.productsFeatureNavGraph
+import dev.chirchir.feature.settings.navigation.SettingsFeature
+import dev.chirchir.feature.settings.navigation.settingsFeatureNavGraph
 import dev.chirchir.ibistores.ui.theme.IBIStoresTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,10 +36,19 @@ class MainActivity : ComponentActivity() {
                     ) {
                         homeFeatureNavGraph(
                             navController = navController,
-                            products = {},
-                            favorites = {},
-                            settings = {}
+                            products = {
+                                ProductsFeature(navController = navController)
+                            },
+                            favorites = {
+                                FavoritesFeature(navController = navController)
+                            },
+                            settings = {
+                                SettingsFeature(navController = navController)
+                            }
                         )
+                        productsFeatureNavGraph(navController = navController)
+                        favoritesFeatureNavGraph(navController = navController)
+                        settingsFeatureNavGraph(navController = navController)
                     }
                 }
             }
