@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search">Search</string>
+    <string name="cancel">Cancel</string>
+    <string name="biometric_prompt_title">Biometric Authentication</string>
+    <string name="biometric_prompt_description">Place your finger on the sensor or look at the front camera to authenticate.</string>
+
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="retry">Retry</string>
+</resources>
