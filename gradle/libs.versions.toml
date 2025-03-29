@@ -16,6 +16,7 @@ timber = "4.7.1"
 lifecycleViewmodelComposeAndroid = "2.8.7"
 composeNavigation = "2.9.0-alpha09"
 gson = "2.11.0"
+accompanist = "0.28.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 androidx-lifecycle-viewmodel-compose-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose-android", version.ref = "lifecycleViewmodelComposeAndroid" }
 androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 android-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+androidx-compose-accompanist = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

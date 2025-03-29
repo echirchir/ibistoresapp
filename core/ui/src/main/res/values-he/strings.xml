@@ -7,4 +7,9 @@
 
     <string name="something_went_wrong">Something went wrong</string>
     <string name="retry">Retry</string>
+
+    <string name="str_menu_home">Home</string>
+    <string name="str_menu_products">Products</string>
+    <string name="str_menu_favorites">Favorites</string>
+    <string name="str_menu_settings">Settings</string>
 </resources>
