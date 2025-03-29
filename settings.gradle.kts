@@ -22,7 +22,6 @@ dependencyResolutionManagement {
 rootProject.name = "IBIStores"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":core")
 include(":domain")
 include(":data")
 include(":feature:home")

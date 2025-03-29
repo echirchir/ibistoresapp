@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -27,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
 import dev.chirchir.core.ui.theme.grey05
 import dev.chirchir.core.ui.theme.grey50
 import dev.chirchir.core.ui.theme.primary70
@@ -40,11 +41,12 @@ internal enum class Pages(val value: Int?, val title: Int, val icon: Int) {
 
     companion object {
         fun fromInt(value: Int): Pages {
-            return Pages.values().find { it.value == value } ?: HOME
+            return Pages.entries.find { it.value == value } ?: HOME
         }
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 internal fun NavigationBarView(
     pagerState: PagerState,
