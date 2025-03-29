@@ -1,5 +1,6 @@
 package dev.chirchir.feature.settings.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,6 +17,7 @@ fun NavGraphBuilder.settingsFeatureNavGraph(
     fromRightComposable(
         route = SETTINGS_HOME_ROUTE
     ) {
+        BackHandler(onBack = {})
         SettingsScreen()
     }
 }
@@ -24,5 +26,6 @@ fun NavGraphBuilder.settingsFeatureNavGraph(
 fun SettingsFeature(
     navController: NavController
 ) {
+    BackHandler(onBack = {})
     SettingsScreen()
 }

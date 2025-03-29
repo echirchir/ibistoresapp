@@ -1,5 +1,6 @@
 package dev.chirchir.feature.products.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,9 +17,8 @@ fun NavGraphBuilder.productsFeatureNavGraph(
     fromRightComposable(
         route = PRODUCTS_HOME_ROUTE
     ) {
-        ProductListScreen {
-
-        }
+        BackHandler(onBack = {})
+        ProductListScreen {}
     }
 }
 
@@ -26,5 +26,6 @@ fun NavGraphBuilder.productsFeatureNavGraph(
 fun ProductsFeature(
     navController: NavController
 ) {
+    BackHandler(onBack = {})
     ProductListScreen {  }
 }

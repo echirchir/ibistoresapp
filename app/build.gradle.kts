@@ -43,6 +43,7 @@ android {
 
 dependencies {
 
+    implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
     implementation(project(":feature:products"))
     implementation(project(":feature:favorites"))

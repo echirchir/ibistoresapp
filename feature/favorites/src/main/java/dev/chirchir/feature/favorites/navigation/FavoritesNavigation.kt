@@ -1,5 +1,6 @@
 package dev.chirchir.feature.favorites.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -16,6 +17,7 @@ fun NavGraphBuilder.favoritesFeatureNavGraph(
     fromRightComposable(
         route = FAVORITES_HOME_ROUTE
     ) {
+        BackHandler(onBack = {})
         FavoritesScreen()
     }
 }
@@ -24,5 +26,6 @@ fun NavGraphBuilder.favoritesFeatureNavGraph(
 fun FavoritesFeature(
     navController: NavController
 ) {
+    BackHandler(onBack = {})
     FavoritesScreen()
 }

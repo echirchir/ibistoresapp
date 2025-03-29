@@ -10,6 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import dev.chirchir.feature.auth.navigation.AUTH_HOME_ROUTE
+import dev.chirchir.feature.auth.navigation.authFeatureNavGraph
 import dev.chirchir.feature.favorites.navigation.FavoritesFeature
 import dev.chirchir.feature.favorites.navigation.favoritesFeatureNavGraph
 import dev.chirchir.feature.home.navigation.homeFeatureNavGraph
@@ -32,8 +34,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "home/home_navigation"
+                        startDestination = AUTH_HOME_ROUTE
                     ) {
+                        authFeatureNavGraph(navController = navController)
                         homeFeatureNavGraph(
                             navController = navController,
                             products = {
