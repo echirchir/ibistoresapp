@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import dev.chirchir.core.ui.theme.IBIStoresTheme
 import dev.chirchir.feature.auth.navigation.AUTH_HOME_ROUTE
 import dev.chirchir.feature.auth.navigation.authFeatureNavGraph
 import dev.chirchir.feature.favorites.navigation.FavoritesFeature
@@ -19,7 +20,6 @@ import dev.chirchir.feature.products.navigation.ProductsFeature
 import dev.chirchir.feature.products.navigation.productsFeatureNavGraph
 import dev.chirchir.feature.settings.navigation.SettingsFeature
 import dev.chirchir.feature.settings.navigation.settingsFeatureNavGraph
-import dev.chirchir.ibistores.ui.theme.IBIStoresTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

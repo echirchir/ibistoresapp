@@ -49,6 +49,14 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.lottie)
     implementation(libs.timber)
+
+    // koin
+    implementation(libs.koin.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.test)
+    implementation(libs.koin.junit)
+
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)

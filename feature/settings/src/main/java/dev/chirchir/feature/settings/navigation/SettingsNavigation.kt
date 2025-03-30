@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import dev.chirchir.core.ui.common.extension.fromRightComposable
+import dev.chirchir.feature.auth.navigation.navigateToSignIn
 import dev.chirchir.feature.settings.screen.SettingsScreen
 
 private const val SETTINGS_HOME_ROUTE = "settings_home_route"
@@ -18,7 +19,7 @@ fun NavGraphBuilder.settingsFeatureNavGraph(
         route = SETTINGS_HOME_ROUTE
     ) {
         BackHandler(onBack = {})
-        SettingsScreen()
+        SettingsScreen(onSignOut = { navController.navigateToSignIn() })
     }
 }
 
@@ -27,5 +28,5 @@ fun SettingsFeature(
     navController: NavController
 ) {
     BackHandler(onBack = {})
-    SettingsScreen()
+    SettingsScreen(onSignOut = { navController.navigateToSignIn() })
 }

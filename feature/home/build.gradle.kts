@@ -52,6 +52,13 @@ dependencies {
     implementation(libs.accompanist.pager)
     implementation(libs.accompanist.insets)
     implementation(libs.accompanist.indicator)
+
+    implementation(libs.koin.compose)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.test)
+    implementation(libs.koin.junit)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

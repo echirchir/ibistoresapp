@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_title">Settings</string>
+    <string name="sign_out_title">Logout</string>
+    <string name="language_setting">Change Language</string>
+    <string name="english">English</string>
+    <string name="hebrew">Hebrew</string>
+    <string name="theme_setting">Change Theme</string>
+    <string name="light_mode">Light</string>
+    <string name="dark_mode">Dark</string>
 </resources>
