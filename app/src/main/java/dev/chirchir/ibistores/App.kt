@@ -6,6 +6,8 @@ import dev.chirchir.feature.favorites.di.FavoritesFeatModule
 import dev.chirchir.feature.home.di.HomeFeatModule
 import dev.chirchir.feature.products.di.ProductsFeatureModule
 import dev.chirchir.feature.settings.di.SettingsFeatModule
+import dev.chirchir.ibistores.di.DataModule
+import dev.chirchir.ibistores.di.DomainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -22,7 +24,9 @@ class App: Application() {
                 AuthFeatModule,
                 FavoritesFeatModule,
                 ProductsFeatureModule,
-                SettingsFeatModule
+                SettingsFeatModule,
+                DataModule,
+                DomainModule
             )
         }
     }
