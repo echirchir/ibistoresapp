@@ -5,7 +5,7 @@
     <string name="language_setting">Change Language</string>
     <string name="english">English</string>
     <string name="hebrew">Hebrew</string>
-    <string name="theme_setting">Change Theme</string>
+    <string name="theme_setting">Toggle Theme</string>
     <string name="light_mode">Light</string>
     <string name="dark_mode">Dark</string>
 </resources>
