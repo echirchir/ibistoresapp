@@ -1,9 +1,9 @@
 package dev.chirchir.ibistores
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,7 +21,7 @@ import dev.chirchir.feature.products.navigation.productsFeatureNavGraph
 import dev.chirchir.feature.settings.navigation.SettingsFeature
 import dev.chirchir.feature.settings.navigation.settingsFeatureNavGraph
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

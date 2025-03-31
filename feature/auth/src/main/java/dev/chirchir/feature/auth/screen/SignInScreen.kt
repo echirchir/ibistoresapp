@@ -2,15 +2,13 @@ package dev.chirchir.feature.auth.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -47,7 +45,7 @@ internal fun SignInScreen(
     onSuccess: () -> Unit
 ) {
     val context = LocalContext.current
-    val biometricUiState = viewModel.biometricUiState.collectAsState()
+    val biometricUiState by viewModel.biometricUiState.collectAsState()
 
     ScreenLayout(
         color = MaterialTheme.colorScheme.background,
@@ -129,17 +127,22 @@ internal fun SignInScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             if(viewModel.isBiometricEnabled) {
-                BiometricSection(onClick = { viewModel.showBiometricPrompt(context = context)} )
+                BiometricSection {
+                    println("The biometric icon was clicked")
+                    viewModel.showBiometricPrompt(context)
+                }
             }
 
-            when(val state = biometricUiState.value) {
-                is UiState.Success -> {
-                    LaunchedEffect(Unit) {
-                        onSuccess()
+            if(viewModel.isBiometricEnabled) {
+                when(val state = biometricUiState) {
+                    is UiState.Success -> {
+                        LaunchedEffect(Unit) {
+                            onSuccess()
+                        }
                     }
+                    is UiState.Failure -> MyToast.SweetError(state.message)
+                    else -> Unit
                 }
-                is UiState.Failure -> MyToast.SweetError(state.message)
-                else -> Unit
             }
         }
     }
@@ -147,22 +150,17 @@ internal fun SignInScreen(
 
 @Composable
 private fun BiometricSection(onClick: () -> Unit) {
-    Row(
+    Box(
         modifier = Modifier
-            .wrapContentSize()
-            .padding(vertical = 16.dp)
+            .size(48.dp)
+            .clickable(onClick = onClick ),
+        contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(id = dev.chirchir.core.ui.R.drawable.ic_finger_printer),
-            contentDescription = "fingerprint",
-            modifier = Modifier
-                .wrapContentSize()
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onClick,
-                ),
-            colorFilter = ColorFilter.tint(green100)
+            contentDescription = "Enable biometric authentication",
+            colorFilter = ColorFilter.tint(green100),
+            modifier = Modifier.size(24.dp)
         )
     }
 }
