@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
@@ -58,7 +59,8 @@ internal fun SignInScreen(
         footer = {
             MyButton(
                 modifier = Modifier.padding(horizontal = 28.dp),
-                text = R.string.sign_in_title
+                text = R.string.sign_in_title,
+                enabled = viewModel.state.canContinue()
             ) {
                 onSuccess()
             }
@@ -66,7 +68,8 @@ internal fun SignInScreen(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 24.dp),
+                .padding(horizontal = 24.dp)
+                .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             var showPassword by remember { mutableStateOf(false) }
@@ -80,17 +83,20 @@ internal fun SignInScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             IBITextField(
-                value = "",
-                onChange = {},
-                isValid = true,
+                value = viewModel.state.email,
+                onChange = {
+                    viewModel.handleEvent(SignInState.Event.OnEmailChange(it))
+                },
+                isValid = viewModel.state.emailError == null,
                 iconPosition = ICONPOSITION.END,
                 isPassword = false,
                 label = "Email",
                 hint = "Email",
-                errorMessage = "You entered the wrong email",
+                errorMessage = viewModel.state.emailError ?: "Enter a valid email",
                 onShowPasswordClicked = {
 
                 },
+                showErrorState = true,
                 fieldDescription = "Enter company issued email",
                 onDone = {},
                 enabled = true,
@@ -101,14 +107,15 @@ internal fun SignInScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             IBITextField(
-                value = "",
-                onChange = {},
-                isValid = true,
+                value = viewModel.state.password,
+                onChange = { viewModel.handleEvent(SignInState.Event.OnPasswordChange(it)) },
+                isValid = viewModel.state.passwordError == null,
                 iconPosition = ICONPOSITION.END,
                 isPassword = true,
-                errorMessage = "Please check your password and try again",
+                errorMessage = viewModel.state.passwordError ?: "Please check your password and try again",
                 label = "Password",
                 hint = "Password",
+                showErrorState = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
@@ -144,6 +151,8 @@ internal fun SignInScreen(
                     else -> Unit
                 }
             }
+
+            Spacer(Modifier.height(48.dp))
         }
     }
 }
