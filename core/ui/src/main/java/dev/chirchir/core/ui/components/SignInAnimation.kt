@@ -18,7 +18,7 @@ import dev.chirchir.core.ui.R
 fun SignInAnimation(
     modifier: Modifier = Modifier
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_loader))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.login_animation))
     Box(
         modifier = modifier
             .fillMaxWidth()
