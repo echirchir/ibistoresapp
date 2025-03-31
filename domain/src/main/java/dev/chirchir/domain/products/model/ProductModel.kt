@@ -1,6 +1,6 @@
 package dev.chirchir.domain.products.model
 
-data class ProductResponse(
+data class ProductsResponse(
     val products: List<Product>,
     val total: Int,
     val skip: Int,
@@ -17,7 +17,7 @@ data class Product(
     val rating: Double,
     val stock: Int,
     val tags: List<String>,
-    val brand: String?,
+    val brand: String? = null,
     val sku: String,
     val weight: Int,
     val dimensions: Dimensions,

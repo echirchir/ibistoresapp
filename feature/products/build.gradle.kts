@@ -36,6 +36,7 @@ android {
 dependencies {
 
     implementation(project(":core:ui"))
+    implementation(project(":domain"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -48,7 +49,9 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.material.icons)
 
+    implementation(libs.coil.compose)
     implementation(libs.koin.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.android)

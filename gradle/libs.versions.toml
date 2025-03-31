@@ -27,6 +27,8 @@ ktor = "2.3.7"
 ktorOkhttp = "2.1.2"
 kotlinSerialization = "1.9.22"
 kotlinxSerializationJson = "1.6.3"
+coil = "2.5.0"
+materialIcons = "1.5.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +73,8 @@ ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-jso
 ktor-content_negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 kotlin-serialization = { group = "org.jetbrains.kotlin", name = "kotlinx-serialization-core", version.ref = "kotlinSerialization" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

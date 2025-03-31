@@ -3,7 +3,7 @@ package dev.chirchir.data.products.datasource.remote.model
 import dev.chirchir.domain.products.model.Dimensions
 import dev.chirchir.domain.products.model.Meta
 import dev.chirchir.domain.products.model.Product
-import dev.chirchir.domain.products.model.ProductResponse
+import dev.chirchir.domain.products.model.ProductsResponse
 import dev.chirchir.domain.products.model.Review
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -42,7 +42,7 @@ data class ProductResponseData(
     @SerialName("tags")
     val tags: List<String>,
     @SerialName("brand")
-    val brand: String?,
+    val brand: String? = null,
     @SerialName("sku")
     val sku: String,
     @SerialName("weight")
@@ -105,7 +105,7 @@ data class ReviewData(
     val reviewerEmail: String
 )
 
-internal fun ProductsResponseData.toDomain() = ProductResponse(
+internal fun ProductsResponseData.toDomain() = ProductsResponse(
     products = products.map { it.toDomain() },
     total = total,
     skip = skip,
