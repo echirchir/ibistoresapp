@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -29,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.chirchir.core.ui.components.HeaderView
 import dev.chirchir.core.ui.components.MyButton
 import dev.chirchir.core.ui.components.ScreenLayout
@@ -42,8 +40,7 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
     onSignOut: () -> Unit
 ) {
-    val isDarkMode by viewModel.isDarkMode.collectAsState()
-    val isHebrewLanguage by viewModel.isHebrewLanguage.collectAsState()
+    val state by viewModel.settingsUiState.collectAsState()
 
     ScreenLayout(
         color = MaterialTheme.colorScheme.background,
@@ -74,9 +71,9 @@ internal fun SettingsScreen(
                 verticalArrangement = Arrangement.Top
             ) {
                 LanguageSettingItem(
-                    isHebrewLanguage = isHebrewLanguage,
+                    isHebrewLanguage = state.isHebrewLanguage,
                     onLanguageSelected = { isHebrew ->
-                        if (isHebrew != isHebrewLanguage) {
+                        if (isHebrew != state.isHebrewLanguage) {
                             viewModel.toggleLanguage()
                         }
                     }
@@ -88,7 +85,7 @@ internal fun SettingsScreen(
                 )
 
                 ThemeSettingItem(
-                    isDarkMode = isDarkMode,
+                    isDarkMode = state.isDarkMode,
                     onThemeChanged = { viewModel.toggleTheme() }
                 )
             }

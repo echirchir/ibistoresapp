@@ -3,40 +3,80 @@ package dev.chirchir.feature.settings.viewmodels
 import dev.chirchir.core.ui.base.BaseViewModel
 import dev.chirchir.core.ui.base.UiEvent
 import dev.chirchir.core.ui.base.UiState
+import dev.chirchir.domain.common.Response
+import dev.chirchir.domain.settings.usecase.GetDarkModeUseCase
+import dev.chirchir.domain.settings.usecase.GetLanguageUseCase
+import dev.chirchir.domain.settings.usecase.SetDarkModeUseCase
+import dev.chirchir.domain.settings.usecase.SetLanguageUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-internal class SettingsViewModel(
-
+class SettingsViewModel(
+    private val setLanguageUseCase: SetLanguageUseCase,
+    private val getLanguageUseCase: GetLanguageUseCase,
+    private val setDarkModeUseCase: SetDarkModeUseCase,
+    private val getDarkModeUseCase: GetDarkModeUseCase
 ) : BaseViewModel<UiState<Any>, UiEvent>(){
-    private val _isDarkMode = MutableStateFlow(false)
-    val isDarkMode: StateFlow<Boolean> = _isDarkMode.asStateFlow()
 
-    private val _isHebrewLanguage = MutableStateFlow(false)
-    val isHebrewLanguage: StateFlow<Boolean> = _isHebrewLanguage.asStateFlow()
+    private val _settingsUiState = MutableStateFlow(SettingsUiState())
+    val settingsUiState: StateFlow<SettingsUiState> = _settingsUiState.asStateFlow()
 
     init {
+        loadSettings()
+    }
+
+    private fun loadSettings() {
         safeLaunch {
-            // Initialize with saved preferences
-            _isDarkMode.value = true // settingsRepository.isDarkModeEnabled().first()
-            _isHebrewLanguage.value = false // settingsRepository.getCurrentLanguage().first() == "he"
+            getDarkModeUseCase.execute().collect { response ->
+                when (response) {
+                    is Response.Success -> {
+                        _settingsUiState.value = _settingsUiState.value.copy(
+                            isDarkMode = response.data,
+                            isLoading = false
+                        )
+                    }
+                    is Response.Failure -> {
+                        _settingsUiState.value = _settingsUiState.value.copy(
+                            error = "",
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+
+            getLanguageUseCase.execute().collect { response ->
+                when (response) {
+                    is Response.Success -> {
+                        _settingsUiState.value = _settingsUiState.value.copy(
+                            isHebrewLanguage = response.data == "he",
+                            isLoading = false
+                        )
+                    }
+                    is Response.Failure -> {
+                        _settingsUiState.value = _settingsUiState.value.copy(
+                            error = "",
+                            isLoading = false
+                        )
+                    }
+                }
+            }
         }
     }
 
     fun toggleTheme() {
-        val newValue = !_isDarkMode.value
-        _isDarkMode.value = newValue
-        safeLaunch  {
-            // settingsRepository.setDarkModeEnabled(newValue)
+        safeLaunch {
+            val newValue = !settingsUiState.value.isDarkMode
+            _settingsUiState.value = _settingsUiState.value.copy(isDarkMode = newValue)
+            setDarkModeUseCase.execute(newValue)
         }
     }
 
     fun toggleLanguage() {
-        val newValue = !_isHebrewLanguage.value
-        _isHebrewLanguage.value = newValue
         safeLaunch {
-            // settingsRepository.setCurrentLanguage(if (newValue) "he" else "en")
+            val newLanguage = if (settingsUiState.value.isHebrewLanguage) "en" else "he"
+            _settingsUiState.value = _settingsUiState.value.copy(isHebrewLanguage = !settingsUiState.value.isHebrewLanguage)
+            setLanguageUseCase.execute(newLanguage)
         }
     }
 }
