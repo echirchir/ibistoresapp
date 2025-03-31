@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.androidx.material3)
+    implementation(libs.datastore.preferences)
 
     // koin
     implementation(libs.koin.compose)

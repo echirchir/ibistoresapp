@@ -8,6 +8,7 @@ import dev.chirchir.feature.products.di.ProductsFeatureModule
 import dev.chirchir.feature.settings.di.SettingsFeatModule
 import dev.chirchir.ibistores.di.DataModule
 import dev.chirchir.ibistores.di.DomainModule
+import dev.chirchir.ibistores.di.dataStoreModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -26,7 +27,8 @@ class App: Application() {
                 ProductsFeatureModule,
                 SettingsFeatModule,
                 DataModule,
-                DomainModule
+                DomainModule,
+                dataStoreModule
             )
         }
     }

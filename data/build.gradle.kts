@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.ktor.logging)
     implementation(libs.ktor.auth)
     implementation(libs.ktor.serialization)
+    implementation(libs.datastore.preferences)
 
     implementation(libs.kotlinx.serialization.json)
 
