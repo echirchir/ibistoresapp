@@ -2,6 +2,7 @@ package dev.chirchir.feature.products.viewmodels
 
 import android.app.Application
 import dev.chirchir.core.ui.base.BaseViewModel
+import dev.chirchir.domain.products.model.PaginationModel
 import dev.chirchir.domain.products.model.Product
 import dev.chirchir.domain.products.usecase.GetProductsUseCase
 import dev.chirchir.feature.products.screen.ProductsState
@@ -25,6 +26,9 @@ internal class ProductsViewModel(
     val state = _state.asStateFlow()
 
     private var productsList: List<Product>? = null
+    private var limit: Int = 100
+    private var totalProducts: Int = 0
+    private var skip: Int = 0
 
     init {
         getPaginatedProducts()
@@ -49,11 +53,14 @@ internal class ProductsViewModel(
 
     private fun getPaginatedProducts() = safeLaunch {
         updateUiState { ProductsUiState.Loading }
-        getProductsUseCase.execute()
+        getProductsUseCase.execute(PaginationModel(limit = limit, skip = skip))
             .fold(
                 onSuccess = { results ->
                     updateUiState { ProductsUiState.Success(results.products) }
                     productsList = results.products
+                    totalProducts = results.total
+                    skip = results.skip
+                    limit = results.limit
                     _productsState.value = ProductsUiState.Success(results.products)
                 },
                 onFailure = { error ->
@@ -62,11 +69,11 @@ internal class ProductsViewModel(
             )
     }
 
-    fun searchQuery(query: String) {
+    private fun loadMoreProducts() {
 
     }
 
     fun refreshProducts() {
-        getPaginatedProducts()
+
     }
 }

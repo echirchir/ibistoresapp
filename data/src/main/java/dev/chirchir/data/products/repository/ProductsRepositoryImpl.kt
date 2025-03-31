@@ -9,9 +9,9 @@ import dev.chirchir.domain.products.repository.ProductsRepository
 class ProductsRepositoryImpl(
     private val dataSource: ProductsDataSource
 ): ProductsRepository {
-    override suspend fun getProducts(): Response<ProductsResponse> {
+    override suspend fun getProducts(limit: Int, skip: Int): Response<ProductsResponse> {
         return try {
-            Response.success(dataSource.getProducts().toDomain())
+            Response.success(dataSource.getProducts(limit, skip).toDomain())
         } catch (e: Exception) {
             Response.failure(e)
         }
