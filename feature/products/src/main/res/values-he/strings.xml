@@ -2,4 +2,5 @@
 <resources>
     <string name="products_title">Products</string>
     <string name="products_details_title">Product Details</string>
+    <string name="edit_product_title">Edit Product</string>
 </resources>

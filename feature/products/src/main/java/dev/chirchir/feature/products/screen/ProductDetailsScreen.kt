@@ -54,7 +54,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun ProductDetailScreen(
     product: Product? = null,
-    onEditClick: () -> Unit,
+    onEditClick: (Product) -> Unit,
     onDeleteClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onBack: () -> Unit,
@@ -160,7 +160,9 @@ fun ProductDetailScreen(
                             if(context.isBiometricsAvailableOrEnabled()) {
                                 context.showBiometricPrompt(
                                     onSuccess = {
-                                        onEditClick()
+                                        product?.let {
+                                            onEditClick(it)
+                                        }
                                     },
                                     onError = {
                                         showAuthErrorMessage = true
