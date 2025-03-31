@@ -38,7 +38,7 @@ import kotlin.random.Random
 @Composable
 internal fun ProductListScreen(
     viewModel: ProductsViewModel = getViewModel(),
-    onProductSelected: (String) -> Unit
+    onProductSelected: (Product) -> Unit
 ) {
     val productsState by viewModel.uiState.collectAsState()
     val state by viewModel.state.collectAsState()
@@ -71,7 +71,12 @@ internal fun ProductListScreen(
                         onSearch = { query ->
                             viewModel.handleEvent(ProductsState.Event.SearchTextChange(query))
                         },
-                        onFilterClick = {}
+                        onFilterClick = {
+
+                        },
+                        onSelect = { product ->
+                            onProductSelected(product)
+                        }
                     )
                 }
                 ProductsUiState.Empty -> Unit
@@ -86,7 +91,8 @@ private fun Success(
     products: List<Product>,
     state: ProductsState.State,
     onSearch: (String) -> Unit,
-    onFilterClick: () -> Unit
+    onFilterClick: () -> Unit,
+    onSelect: (Product) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -128,7 +134,7 @@ private fun Success(
             ProductItem(
                 product = product,
                 isFavorite = Random.nextBoolean(),
-                onClick = {  }
+                onClick = { onSelect(product) }
             )
         }
     }

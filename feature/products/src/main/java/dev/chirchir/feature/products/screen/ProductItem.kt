@@ -40,14 +40,14 @@ import dev.chirchir.domain.products.model.Product
 internal fun ProductItem(
     product: Product,
     isFavorite: Boolean,
-    onClick: (Int) -> Unit
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                onClick(product.id)
+                onClick()
             },
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
