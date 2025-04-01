@@ -1,6 +1,5 @@
 package dev.chirchir.core.ui.components
 
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,7 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,14 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.chirchir.core.ui.R
-import dev.chirchir.core.ui.theme.black
-import dev.chirchir.core.ui.theme.grey05
 import dev.chirchir.core.ui.theme.white
 
 @Composable
@@ -52,11 +52,11 @@ fun HeaderView(
         ) {
             Row {
                 onBack?.let {
-                    ItemView(icon = R.drawable.ic_back, onClick = it)
+                    ItemView(icon = Icons.AutoMirrored.Default.ArrowBack, onClick = it)
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 onClose?.let {
-                    ItemView(icon = R.drawable.ic_close, onClick = it)
+                    ItemView(icon = Icons.Default.Close, onClick = it)
                 }
             }
             title?.let {
@@ -64,7 +64,7 @@ fun HeaderView(
                     text = stringResource(id = it),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = black,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -81,21 +81,25 @@ fun HeaderView(
 
 @Composable
 private fun ItemView(
-    @DrawableRes icon: Int,
+    icon: ImageVector,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(36.dp)
             .clip(RoundedCornerShape(10.dp))
-            .background(grey05)
-            .clickable(onClick = onClick),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(
+                onClick = onClick
+            ),
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            modifier = Modifier.size(16.dp),
-            painter = painterResource(id = icon),
+            imageVector = icon,
             contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

@@ -5,6 +5,7 @@ import dev.chirchir.core.ui.base.BaseViewModel
 import dev.chirchir.domain.products.model.PaginationModel
 import dev.chirchir.domain.products.model.Product
 import dev.chirchir.domain.products.usecase.GetProductsUseCase
+import dev.chirchir.feature.products.screen.FilterOption
 import dev.chirchir.feature.products.screen.ProductsState
 import dev.chirchir.feature.products.screen.ProductsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,15 +39,28 @@ internal class ProductsViewModel(
         when(event) {
             is ProductsState.Event.SearchTextChange -> {
                 _state.update { _state.value.copy(searchText = event.text) }
-                filter(event.text)
+                applySearch(event.text)
             }
             is ProductsState.Event.FilterProducts -> {
-
+                _state.update { _state.value.copy(filterOption = event.option) }
+                applyFilter(event.option)
             }
         }
     }
 
-    private fun filter(text: String) = productsList?.filter { it.toString().uppercase().contains(text.uppercase()) }?.let { data ->
+    private fun applyFilter(option: FilterOption) {
+        val currentList = productsList?: emptyList()
+        val filteredResults = when (option) {
+            FilterOption.PRICE_ASCENDING -> currentList.sortedBy { it.price }
+            FilterOption.PRICE_DESCENDING -> currentList.sortedByDescending { it.price }
+            FilterOption.NAME_ASCENDING -> currentList.sortedBy { it.title.lowercase() }
+            FilterOption.NAME_DESCENDING -> currentList.sortedByDescending { it.title.lowercase() }
+            FilterOption.NONE -> currentList
+        }
+        updateUiState { ProductsUiState.Success(filteredResults) }
+    }
+
+    private fun applySearch(text: String) = productsList?.filter { it.toString().uppercase().contains(text.uppercase()) }?.let { data ->
         if (data.isEmpty()) updateUiState { ProductsUiState.Empty }
         else updateUiState { ProductsUiState.Success(data) }
     }

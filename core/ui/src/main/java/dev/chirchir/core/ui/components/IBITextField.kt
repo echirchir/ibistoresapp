@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.chirchir.core.ui.R
 import dev.chirchir.core.ui.theme.gray00
-import dev.chirchir.core.ui.theme.grey100
 
 enum class ICONPOSITION {
     START,
@@ -90,7 +89,7 @@ fun IBITextField(
         ResponsiveText(
             text = label,
             maxLines = 1,
-            color = grey100,
+            color = MaterialTheme.colorScheme.primary,
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 fontWeight = if (boldLabel) FontWeight.Medium else FontWeight.Medium
             )

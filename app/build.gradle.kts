@@ -38,7 +38,9 @@ android {
         compose = true
     }
 
-
+    androidResources {
+        generateLocaleConfig = true
+    }
 }
 
 dependencies {

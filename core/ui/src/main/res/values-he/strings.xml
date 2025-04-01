@@ -12,4 +12,6 @@
     <string name="str_menu_products">Products</string>
     <string name="str_menu_favorites">Favorites</string>
     <string name="str_menu_settings">Settings</string>
+
+    <string name="products_description">!כאן יופיעו המוצרים שלך</string>
 </resources>

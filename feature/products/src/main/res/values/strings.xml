@@ -4,4 +4,6 @@
     <string name="products_details_title">Product Details</string>
     <string name="edit_product_title">Edit Product</string>
     <string name="update_product">Update</string>
+    <string name="filter_by_title">Filter By:</string>
+    <string name="apply_filter_title">Apply Filter</string>
 </resources>

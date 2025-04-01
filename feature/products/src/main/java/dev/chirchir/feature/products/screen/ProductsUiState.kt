@@ -13,11 +13,11 @@ internal sealed class ProductsUiState {
 internal class ProductsState {
     sealed class Event: UiEvent {
         data class SearchTextChange(val text: String) : Event()
-        data class FilterProducts(val text: String): Event()
+        data class FilterProducts(val option: FilterOption): Event()
     }
 
     data class State(
         val searchText: String = "",
-        val filters: String = ""
+        val filterOption: FilterOption = FilterOption.NONE
     )
 }

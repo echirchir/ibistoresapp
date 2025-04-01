@@ -1,7 +1,8 @@
 package dev.chirchir.data.settings
 
 import android.content.Context
-import android.content.res.Configuration
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -12,7 +13,6 @@ import dev.chirchir.domain.settings.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
-import java.util.Locale
 
 class SettingsRepositoryImpl(
     private val dataStore: DataStore<Preferences>,
@@ -42,10 +42,11 @@ class SettingsRepositoryImpl(
     }
 
     override suspend fun setAppLanguage(languageCode: String): Response<Boolean> {
+
         dataStore.edit { preferences ->
             preferences[LANGUAGE_KEY] = languageCode
         }
-        updateAppLocale(languageCode)
+        // updateAppLocale(languageCode)
         return Response.Success(true)
     }
 
@@ -60,16 +61,7 @@ class SettingsRepositoryImpl(
     }
 
     private fun updateAppLocale(languageCode: String) {
-        val locale = when (languageCode) {
-            "he" -> Locale("he")
-            else -> Locale.ENGLISH
-        }
-
-        val config = Configuration(context.resources.configuration).apply {
-            setLocale(locale)
-        }
-
-        context.createConfigurationContext(config)
-        Locale.setDefault(locale)
+        val localeList = LocaleListCompat.forLanguageTags(languageCode)
+        AppCompatDelegate.setApplicationLocales(localeList)
     }
 }
