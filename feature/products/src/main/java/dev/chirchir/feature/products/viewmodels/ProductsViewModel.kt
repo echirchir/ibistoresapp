@@ -2,6 +2,7 @@ package dev.chirchir.feature.products.viewmodels
 
 import android.app.Application
 import dev.chirchir.core.ui.base.BaseViewModel
+import dev.chirchir.core.ui.base.UiState
 import dev.chirchir.domain.products.model.PaginationModel
 import dev.chirchir.domain.products.model.Product
 import dev.chirchir.domain.products.usecase.GetProductsUseCase
@@ -9,7 +10,6 @@ import dev.chirchir.feature.products.screen.FilterOption
 import dev.chirchir.feature.products.screen.ProductsState
 import dev.chirchir.feature.products.screen.ProductsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -18,21 +18,18 @@ internal class ProductsViewModel(
     private val getProductsUseCase: GetProductsUseCase
 ): BaseViewModel<ProductsUiState, ProductsState.Event>() {
 
-    private val _productsState = MutableStateFlow<ProductsUiState>(ProductsUiState.Loading)
-    val productsState: StateFlow<ProductsUiState> = _productsState.asStateFlow()
-
     private val _state: MutableStateFlow<ProductsState.State> by lazy { MutableStateFlow(
         ProductsState.State()
     ) }
     val state = _state.asStateFlow()
 
+    private val _scrollState: MutableStateFlow<Any?> by lazy { MutableStateFlow(UiState.Idle) }
+    val scrollState = _scrollState.asStateFlow()
+
     private var productsList: List<Product>? = null
-    private var limit: Int = 100
-    private var totalProducts: Int = 0
-    private var skip: Int = 0
 
     init {
-        getPaginatedProducts()
+        loadInitialProducts()
     }
 
     override fun handleEvent(event: ProductsState.Event) {
@@ -44,6 +41,9 @@ internal class ProductsViewModel(
             is ProductsState.Event.FilterProducts -> {
                 _state.update { _state.value.copy(filterOption = event.option) }
                 applyFilter(event.option)
+            }
+            ProductsState.Event.LoadMore -> {
+                loadMoreProducts()
             }
         }
     }
@@ -65,29 +65,52 @@ internal class ProductsViewModel(
         else updateUiState { ProductsUiState.Success(data) }
     }
 
-    private fun getPaginatedProducts() = safeLaunch {
+    private fun loadInitialProducts() = safeLaunch {
         updateUiState { ProductsUiState.Loading }
-        getProductsUseCase.execute(PaginationModel(limit = limit, skip = skip))
+        getProductsUseCase.execute(PaginationModel(limit = state.value.limit, skip = state.value.skip))
             .fold(
                 onSuccess = { results ->
-                    updateUiState { ProductsUiState.Success(results.products) }
-                    productsList = results.products
-                    totalProducts = results.total
-                    skip = results.skip
-                    limit = results.limit
-                    _productsState.value = ProductsUiState.Success(results.products)
+                    if (results.products.isEmpty()) updateUiState { ProductsUiState.Empty }
+                    else {
+                        updateUiState { ProductsUiState.Success(results.products) }
+                        productsList = results.products
+                        _state.value = _state.value.copy(
+                            totalProducts = results.total,
+                            skip = results.skip,
+                            limit = results.limit
+                        )
+                    }
                 },
                 onFailure = { error ->
-                    _productsState.value = ProductsUiState.Fail(error.message ?: "Unknown error")
+                    updateUiState { ProductsUiState.Fail(error.message) }
                 }
             )
     }
 
-    private fun loadMoreProducts() {
-
+    private fun loadMoreProducts()  = safeLaunch {
+        val hasNextPage = state.value.totalProducts > (productsList?.size ?: 0)
+        if(hasNextPage) {
+            _scrollState.value = UiState.Loading
+            getProductsUseCase.execute(
+                PaginationModel(
+                    limit = state.value.limit,
+                    skip = _state.value.skip
+                )
+            ).fold(
+                onSuccess = { results ->
+                    _scrollState.value = UiState.Idle
+                    _state.value = _state.value.copy(
+                        skip = _state.value.skip + results.products.size
+                    )
+                    productsList = productsList?.plus(results.products)
+                    updateUiState { ProductsUiState.Success(productsList ?: emptyList()) }
+                },
+                onFailure = {
+                    _scrollState.value = UiState.Idle
+                }
+            )
+        }
     }
 
-    fun refreshProducts() {
-
-    }
+    fun refreshProducts() = loadInitialProducts()
 }

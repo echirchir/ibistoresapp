@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
@@ -26,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +38,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import dev.chirchir.core.ui.base.UiState
 import dev.chirchir.core.ui.components.CenteredLoading
+import dev.chirchir.core.ui.components.CircularProgress
 import dev.chirchir.core.ui.components.FailedView
 import dev.chirchir.core.ui.components.HeaderView
 import dev.chirchir.core.ui.components.SearchTextField
@@ -55,7 +57,6 @@ internal fun ProductListScreen(
     onProductSelected: (Product) -> Unit
 ) {
     val productsState by viewModel.uiState.collectAsState()
-    val state by viewModel.state.collectAsState()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -71,6 +72,10 @@ internal fun ProductListScreen(
                 .padding(top = it.calculateTopPadding())
         ) {
             when(val products = productsState) {
+                is ProductsUiState.Empty -> {
+                    EmptyView()
+                }
+
                 is ProductsUiState.Fail -> {
                     FailedView(onRetry = { viewModel.refreshProducts() })
                 }
@@ -81,7 +86,7 @@ internal fun ProductListScreen(
                 is ProductsUiState.Success -> {
                     Success(
                         products = products.data,
-                        state = state,
+                        viewModel = viewModel,
                         onSearch = { query ->
                             viewModel.handleEvent(ProductsState.Event.SearchTextChange(query))
                         },
@@ -104,13 +109,15 @@ internal fun ProductListScreen(
 @Composable
 private fun Success(
     products: List<Product>,
-    state: ProductsState.State,
+    viewModel: ProductsViewModel,
     onSearch: (String) -> Unit,
     onApplyFilter: (filterOption: FilterOption) -> Unit,
     onSelect: (Product) -> Unit
 ) {
     var showFilterDialog by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+    val state by viewModel.state.collectAsState()
+    val scrollUiState by viewModel.scrollState.collectAsState()
 
     Row(
         modifier = Modifier
@@ -150,12 +157,29 @@ private fun Success(
     LazyColumn(
         modifier = Modifier.padding(horizontal = 20.dp)
     ) {
-        items(products) { product ->
+        items(products.size) { index ->
+            if(index >= products.size - 1) {
+                LaunchedEffect(index) {
+                    viewModel.handleEvent(ProductsState.Event.LoadMore)
+                }
+            }
             ProductItem(
-                product = product,
+                product = products[index],
                 isFavorite = Random.nextBoolean(),
-                onClick = { onSelect(product) }
+                onClick = { onSelect(products[index]) }
             )
+        }
+        when (scrollUiState) {
+            UiState.Loading -> {
+                item {
+                    LoadMoreView()
+                }
+            }
+            else -> Unit
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 
@@ -175,6 +199,16 @@ private fun Success(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun LoadMoreView() {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.Center
+    ) {
+        CircularProgress(modifier = Modifier.size(18.dp))
     }
 }
 
