@@ -1,6 +1,5 @@
 package dev.chirchir.feature.products.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,17 +32,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.chirchir.core.ui.base.UiState
 import dev.chirchir.core.ui.components.CenteredLoading
 import dev.chirchir.core.ui.components.CircularProgress
+import dev.chirchir.core.ui.components.EmptyView
 import dev.chirchir.core.ui.components.FailedView
 import dev.chirchir.core.ui.components.HeaderView
+import dev.chirchir.core.ui.components.ProductItem
 import dev.chirchir.core.ui.components.SearchTextField
-import dev.chirchir.core.ui.theme.grey100
 import dev.chirchir.domain.products.model.Product
 import dev.chirchir.feature.products.R
 import dev.chirchir.feature.products.viewmodels.ProductsViewModel
@@ -97,7 +93,7 @@ internal fun ProductListScreen(
                         }
                     )
                 }
-                ProductsUiState.Empty -> Unit
+                ProductsUiState.Empty -> EmptyView()
                 else -> Unit
             }
         }
@@ -207,32 +203,5 @@ private fun LoadMoreView() {
         horizontalArrangement = Arrangement.Center
     ) {
         CircularProgress(modifier = Modifier.size(18.dp))
-    }
-}
-
-@Composable
-internal fun EmptyView() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Spacer(modifier = Modifier.height(94.dp))
-        Image(
-            painter = painterResource(id = dev.chirchir.core.ui.R.drawable.no_products),
-            contentDescription = ""
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-        Text(
-            text =  stringResource(id = dev.chirchir.core.ui.R.string.products_description),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                grey100
-            ),
-            textAlign = TextAlign.Center
-        )
     }
 }

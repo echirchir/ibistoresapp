@@ -24,7 +24,7 @@ fun Product.toEntity(): ProductEntity {
         title = this.title,
         description = this.description,
         price = this.price,
-        brand = this.brand ?: "",
+        brand = this.brand ?: "No Brand",
         thumbnail = this.thumbnail,
         favorited = this.isFavorited
     )

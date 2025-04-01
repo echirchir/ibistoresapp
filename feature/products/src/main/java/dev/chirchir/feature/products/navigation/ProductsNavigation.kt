@@ -20,7 +20,7 @@ private const val PRODUCTS_HOME_ROUTE = "products_home_route"
 private const val PRODUCT_DETAILS_ROUTE = "product_details_route"
 private const val EDIT_PRODUCT_ROUTE = "edit_product_route"
 
-private fun NavController.navigateToProductDetails() = navigate(PRODUCT_DETAILS_ROUTE) { launchSingleTop = true }
+fun NavController.navigateToProductDetails() = navigate(PRODUCT_DETAILS_ROUTE) { launchSingleTop = true }
 private fun NavController.navigateToEditProduct() = navigate(EDIT_PRODUCT_ROUTE) { launchSingleTop = true }
 
 fun NavGraphBuilder.productsFeatureNavGraph(

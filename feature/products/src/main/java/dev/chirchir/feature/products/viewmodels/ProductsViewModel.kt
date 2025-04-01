@@ -1,6 +1,5 @@
 package dev.chirchir.feature.products.viewmodels
 
-import android.app.Application
 import dev.chirchir.core.ui.base.BaseViewModel
 import dev.chirchir.core.ui.base.UiState
 import dev.chirchir.domain.products.model.PaginationModel
@@ -16,7 +15,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 internal class ProductsViewModel(
-    private val application: Application,
     private val getProductsUseCase: GetProductsUseCase
 ): BaseViewModel<ProductsUiState, ProductsState.Event>() {
 
@@ -94,8 +92,8 @@ internal class ProductsViewModel(
     }
 
     private fun loadMoreProducts() = safeLaunch {
-        val hasNextPage = state.value.totalProducts > (productsList?.size ?: 0)
-        if (hasNextPage) {
+        val hasMoreProducts = state.value.totalProducts > (productsList?.size ?: 0)
+        if (hasMoreProducts) {
             _scrollState.value = UiState.Loading
 
             getProductsUseCase.execute(
@@ -110,7 +108,7 @@ internal class ProductsViewModel(
                         _state.value = _state.value.copy(
                             skip = _state.value.skip + results.products.size
                         )
-                        productsList = productsList?.plus(results.products) ?: results.products
+                        productsList = productsList?.plus(results.products) ?: emptyList()
                         updateUiState { ProductsUiState.Success(productsList ?: emptyList()) }
                     },
                     onFailure = {

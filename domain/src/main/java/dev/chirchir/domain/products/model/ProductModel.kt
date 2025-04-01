@@ -17,7 +17,7 @@ data class Product(
     val rating: Double = 0.0,
     val stock: Int = 0,
     val tags: List<String> = emptyList(),
-    val brand: String? = null,
+    val brand: String? = "No Brand",
     val sku: String = "",
     val weight: Int = 0,
     val dimensions: Dimensions? = null,

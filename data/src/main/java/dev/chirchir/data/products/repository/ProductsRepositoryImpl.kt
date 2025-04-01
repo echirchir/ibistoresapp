@@ -22,7 +22,6 @@ class ProductsRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher
 ): ProductsRepository {
     override fun getProducts(limit: Int, skip: Int): Flow<Response<ProductsResponse>> = flow {
-
         try {
             val remoteProducts = remoteDataSource.getProducts(limit = limit, skip = skip).toDomain()
             val entities = remoteProducts.products.map { prod ->

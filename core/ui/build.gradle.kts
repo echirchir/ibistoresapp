@@ -38,6 +38,8 @@ android {
 
 dependencies {
 
+    implementation(project(":domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -56,6 +58,9 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.test)
     implementation(libs.koin.junit)
+
+    implementation(libs.coil.compose)
+    implementation(libs.material.icons)
 
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
