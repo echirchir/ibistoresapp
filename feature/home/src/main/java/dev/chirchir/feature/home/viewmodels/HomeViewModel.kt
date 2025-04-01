@@ -13,8 +13,4 @@ internal class HomeViewModel(
     private val getProductById: GetProductByIdUseCase
 ) : BaseViewModel<UiState<Any>, UiEvent>() {
 
-
-    fun getProducts() = safeLaunch {
-
-    }
 }
