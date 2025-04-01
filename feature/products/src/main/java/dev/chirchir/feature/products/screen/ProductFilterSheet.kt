@@ -57,27 +57,27 @@ internal fun ProductFilterSheet(
 
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
             RadioOption(
-                text = "No Filter",
+                text = stringResource(R.string.no_filter),
                 selected = selectedOption == FilterOption.NONE,
                 onSelect = { selectedOption = FilterOption.NONE }
             )
             RadioOption(
-                text = "Price ASC",
+                text = stringResource(R.string.price_ascending),
                 selected = selectedOption == FilterOption.PRICE_ASCENDING,
                 onSelect = { selectedOption = FilterOption.PRICE_ASCENDING }
             )
             RadioOption(
-                text = "Price DESC",
+                text = stringResource(R.string.price_descending),
                 selected = selectedOption == FilterOption.PRICE_DESCENDING,
                 onSelect = { selectedOption = FilterOption.PRICE_DESCENDING }
             )
             RadioOption(
-                text = "Name ASC",
+                text = stringResource(R.string.name_ascending),
                 selected = selectedOption == FilterOption.NAME_ASCENDING,
                 onSelect = { selectedOption = FilterOption.NAME_ASCENDING }
             )
             RadioOption(
-                text = "Name DESC",
+                text = stringResource(R.string.name_descending),
                 selected = selectedOption == FilterOption.NAME_DESCENDING,
                 onSelect = { selectedOption = FilterOption.NAME_DESCENDING }
             )

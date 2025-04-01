@@ -4,4 +4,10 @@
     <string name="products_details_title">Product Details</string>
     <string name="edit_product_title">Edit Product</string>
     <string name="update_product">Update</string>
+
+    <string name="no_filter">No Filter</string>
+    <string name="price_ascending">Price ASC</string>
+    <string name="price_descending">Price DESC</string>
+    <string name="name_ascending">Name ASC</string>
+    <string name="name_descending">Name DESC</string>
 </resources>
