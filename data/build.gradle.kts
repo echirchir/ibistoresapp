@@ -51,6 +51,9 @@ dependencies {
     implementation(libs.datastore.preferences)
 
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.room.common)
+    implementation(libs.room.database)
+    implementation(libs.androidx.adapters)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

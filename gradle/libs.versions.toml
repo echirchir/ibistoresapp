@@ -30,6 +30,8 @@ kotlinxSerializationJson = "1.6.3"
 coil = "2.5.0"
 materialIcons = "1.7.8"
 dataStore = "1.1.4"
+roomDatabase = "2.6.1"
+adapters = "3.2.0-alpha11"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,6 +79,9 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+room-database = { group = "androidx.room", name = "room-runtime", version.ref = "roomDatabase" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomDatabase" }
+androidx-adapters = { group = "androidx.databinding", name = "adapters", version.ref = "adapters" }
 
 
 [plugins]
