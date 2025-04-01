@@ -39,7 +39,6 @@ import dev.chirchir.domain.products.model.Product
 @Composable
 internal fun ProductItem(
     product: Product,
-    isFavorite: Boolean,
     onClick: () -> Unit
 ) {
     Card(
@@ -96,7 +95,7 @@ internal fun ProductItem(
                         modifier = Modifier.weight(1f)
                     )
 
-                    if (isFavorite) {
+                    if (product.isFavorited) {
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = "Favorite",
@@ -120,7 +119,7 @@ internal fun ProductItem(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = product.brand ?: "Not Available",
+                    text = product.brand ?: "No brand",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                     modifier = Modifier.background(

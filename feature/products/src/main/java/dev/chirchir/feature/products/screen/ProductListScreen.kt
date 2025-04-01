@@ -49,7 +49,6 @@ import dev.chirchir.domain.products.model.Product
 import dev.chirchir.feature.products.R
 import dev.chirchir.feature.products.viewmodels.ProductsViewModel
 import org.koin.androidx.compose.getViewModel
-import kotlin.random.Random
 
 @Composable
 internal fun ProductListScreen(
@@ -165,7 +164,6 @@ private fun Success(
             }
             ProductItem(
                 product = products[index],
-                isFavorite = Random.nextBoolean(),
                 onClick = { onSelect(products[index]) }
             )
         }

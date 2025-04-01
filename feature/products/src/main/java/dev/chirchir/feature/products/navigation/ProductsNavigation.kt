@@ -14,6 +14,7 @@ import dev.chirchir.feature.products.screen.ProductListScreen
 
 private const val SELECTED_PRODUCT = "selected_product"
 private const val EDITING_PRODUCT = "editing_product"
+private const val SHOULD_REFRESH_AFTER_EDIT = "should_refresh_after_edit"
 
 private const val PRODUCTS_HOME_ROUTE = "products_home_route"
 private const val PRODUCT_DETAILS_ROUTE = "product_details_route"
@@ -41,17 +42,20 @@ fun NavGraphBuilder.productsFeatureNavGraph(
         BackHandler(onBack = navController::popBackStack)
         val product = navController.previousBackStackEntry?.savedStateHandle?.get<String>(
             SELECTED_PRODUCT)?.fromJson<Product>()
-        ProductDetailScreen(
-            product = product,
-            onDeleteClick = {},
-            onEditClick = { toEdit ->
-                navController.currentBackStackEntry?.savedStateHandle?.set(EDITING_PRODUCT, toEdit.toJson())
-                navController.navigateToEditProduct()
-            },
-            onFavoriteClick = {},
-            onBack = navController::popBackStack,
-            isFavorite = false
-        )
+        val refreshAfterEdit = navController.currentBackStackEntry?.savedStateHandle?.get<Boolean>(
+            SHOULD_REFRESH_AFTER_EDIT)
+        product?.let {
+            ProductDetailScreen(
+                product = it,
+                shouldRefresh = refreshAfterEdit,
+                onDelete = navController::popBackStack,
+                onEditClick = { toEdit ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set(EDITING_PRODUCT, toEdit.toJson())
+                    navController.navigateToEditProduct()
+                },
+                onBack = navController::popBackStack
+            )
+        }
     }
 
     fromRightComposable(
@@ -63,7 +67,11 @@ fun NavGraphBuilder.productsFeatureNavGraph(
         product?.let {
             EditProductScreen(
                 product = it,
-                onBack = navController::popBackStack
+                onBack = { shouldRefresh ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        SHOULD_REFRESH_AFTER_EDIT, shouldRefresh)
+                    navController.popBackStack()
+                }
             )
         }
     }

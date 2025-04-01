@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,21 +50,31 @@ import dev.chirchir.core.ui.components.HeaderView
 import dev.chirchir.core.ui.toast.MyToast
 import dev.chirchir.domain.products.model.Product
 import dev.chirchir.feature.products.R
+import dev.chirchir.feature.products.viewmodels.ProductDetailsViewModel
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ProductDetailScreen(
-    product: Product? = null,
+    viewModel: ProductDetailsViewModel = getViewModel(),
+    product: Product,
+    shouldRefresh: Boolean? = false,
     onEditClick: (Product) -> Unit,
-    onDeleteClick: () -> Unit,
-    onFavoriteClick: () -> Unit,
-    onBack: () -> Unit,
-    isFavorite: Boolean
+    onDelete: () -> Unit,
+    onBack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    val state by viewModel.state.collectAsState()
 
     var showAuthErrorMessage by remember { mutableStateOf(false) }
+
+    LaunchedEffect(product, shouldRefresh) {
+        viewModel.handleEvent(DetailEvent.SetProduct(product))
+        if(shouldRefresh == true) {
+            viewModel.reloadProduct()
+        }
+    }
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -75,7 +86,6 @@ fun ProductDetailScreen(
             )
         }
     ) { paddingValues ->
-
         if(showAuthErrorMessage) {
             MyToast.SweetError("Authentication failed. Operation not allowed")
             LaunchedEffect(Unit) {
@@ -93,7 +103,7 @@ fun ProductDetailScreen(
         ) {
 
             AsyncImage(
-                model = product?.thumbnail ?: "",
+                model = state.product?.thumbnail,
                 contentDescription = "Product image",
                 contentScale = ContentScale.Crop,
                 placeholder = rememberVectorPainter(Icons.Default.Image),
@@ -108,14 +118,14 @@ fun ProductDetailScreen(
                 modifier = Modifier.padding(16.dp)
             ) {
                 Text(
-                    text = product?.title ?: "",
+                    text = state.product?.title ?: "",
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 Text(
-                    text = product?.description ?: "",
+                    text = state.product?.description ?: "",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -129,7 +139,7 @@ fun ProductDetailScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = product?.brand ?: "No brand",
+                        text = state.product?.brand ?: "No brand",
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
@@ -141,7 +151,7 @@ fun ProductDetailScreen(
                     )
 
                     Text(
-                        text = "$${"%.2f".format(product?.price)}",
+                        text = "$${"%.2f".format(state.product?.price)}",
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
@@ -160,9 +170,7 @@ fun ProductDetailScreen(
                             if(context.isBiometricsAvailableOrEnabled()) {
                                 context.showBiometricPrompt(
                                     onSuccess = {
-                                        product?.let {
-                                            onEditClick(it)
-                                        }
+                                        onEditClick(product)
                                     },
                                     onError = {
                                         showAuthErrorMessage = true
@@ -190,7 +198,7 @@ fun ProductDetailScreen(
                             if(context.isBiometricsAvailableOrEnabled()) {
                                 context.showBiometricPrompt(
                                     onSuccess = {
-                                        onDeleteClick()
+                                        viewModel.handleEvent(DetailEvent.DeleteProduct(onDelete = onDelete, onFail = {}))
                                     },
                                     onError = {
                                         showAuthErrorMessage = true
@@ -212,7 +220,9 @@ fun ProductDetailScreen(
                     }
 
                     IconButton(
-                        onClick = onFavoriteClick,
+                        onClick = {
+                            viewModel.handleEvent(DetailEvent.FavoriteProduct)
+                        },
                         modifier = Modifier
                             .size(48.dp)
                             .background(
@@ -221,9 +231,9 @@ fun ProductDetailScreen(
                             )
                     ) {
                         Icon(
-                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.Favorite,
+                            imageVector = if (state.product?.isFavorited == true) Icons.Filled.Favorite else Icons.Outlined.Favorite,
                             contentDescription = "Favorite",
-                            tint = if (isFavorite) MaterialTheme.colorScheme.error
+                            tint = if (state.product?.isFavorited == true) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                             modifier = Modifier.size(24.dp)
                         )
