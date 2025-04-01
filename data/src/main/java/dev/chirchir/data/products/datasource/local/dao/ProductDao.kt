@@ -35,18 +35,12 @@ interface ProductDao {
 
     @Transaction
     suspend fun syncProducts(products: List<ProductEntity>) {
-        // First delete products not in the new list
         val existingIds = products.map { it.id }
-        // This is more efficient than deleting all and reinserting
-        // Only works if you have a small dataset (<1000 items)
-        // For larger datasets, consider a different approach
         val productsToDelete = getProductsNotInList(existingIds)
         productsToDelete.forEach { deleteProduct(it) }
 
-        // Then insert/update the new products
         insertProducts(products)
 
-        // Update existing products that might have changed
         products.forEach { product ->
             val existing = getProductById(product.id)
             if (existing != null && existing != product) {
@@ -54,6 +48,9 @@ interface ProductDao {
             }
         }
     }
+
+    @Query("SELECT * FROM products WHERE favorited = 1 ORDER BY lastUpdated DESC")
+    fun observeFavoritedProducts(): Flow<List<ProductEntity>>
 
     @Query("SELECT * FROM products WHERE id NOT IN (:ids)")
     suspend fun getProductsNotInList(ids: List<Int>): List<ProductEntity>

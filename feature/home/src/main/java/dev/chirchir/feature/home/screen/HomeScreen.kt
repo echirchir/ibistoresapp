@@ -2,6 +2,7 @@ package dev.chirchir.feature.home.screen
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import dev.chirchir.core.ui.components.HeaderView
 import dev.chirchir.core.ui.components.ScreenLayout
 import dev.chirchir.feature.home.R
@@ -21,6 +22,8 @@ internal fun HomeScreen(
             )
         }
     ) {
-
+        LaunchedEffect(Unit) {
+            viewModel.getProducts()
+        }
     }
 }

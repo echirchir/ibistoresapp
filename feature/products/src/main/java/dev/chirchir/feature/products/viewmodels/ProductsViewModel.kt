@@ -11,6 +11,8 @@ import dev.chirchir.feature.products.screen.ProductsState
 import dev.chirchir.feature.products.screen.ProductsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 internal class ProductsViewModel(
@@ -29,7 +31,7 @@ internal class ProductsViewModel(
     private var productsList: List<Product>? = null
 
     init {
-        loadInitialProducts()
+        loadProducts()
     }
 
     override fun handleEvent(event: ProductsState.Event) {
@@ -65,52 +67,59 @@ internal class ProductsViewModel(
         else updateUiState { ProductsUiState.Success(data) }
     }
 
-    private fun loadInitialProducts() = safeLaunch {
+    private fun loadProducts() = safeLaunch {
         updateUiState { ProductsUiState.Loading }
         getProductsUseCase.execute(PaginationModel(limit = state.value.limit, skip = state.value.skip))
-            .fold(
-                onSuccess = { results ->
-                    if (results.products.isEmpty()) updateUiState { ProductsUiState.Empty }
-                    else {
-                        updateUiState { ProductsUiState.Success(results.products) }
-                        productsList = results.products
-                        _state.value = _state.value.copy(
-                            totalProducts = results.total,
-                            skip = results.skip,
-                            limit = results.limit
-                        )
+            .onEach { result ->
+                result.fold(
+                    onSuccess = { results ->
+                        if (results.products.isEmpty()) {
+                            updateUiState { ProductsUiState.Empty }
+                        } else {
+                            updateUiState { ProductsUiState.Success(results.products) }
+                            productsList = results.products
+                            _state.value = _state.value.copy(
+                                totalProducts = results.total,
+                                skip = results.skip,
+                                limit = results.limit
+                            )
+                        }
+                    },
+                    onFailure = { error ->
+                        updateUiState { ProductsUiState.Fail(error.message ?: "Unknown error") }
                     }
-                },
-                onFailure = { error ->
-                    updateUiState { ProductsUiState.Fail(error.message) }
-                }
-            )
+                )
+            }
+            .launchIn(this)
     }
 
-    private fun loadMoreProducts()  = safeLaunch {
+    private fun loadMoreProducts() = safeLaunch {
         val hasNextPage = state.value.totalProducts > (productsList?.size ?: 0)
-        if(hasNextPage) {
+        if (hasNextPage) {
             _scrollState.value = UiState.Loading
+
             getProductsUseCase.execute(
                 PaginationModel(
                     limit = state.value.limit,
                     skip = _state.value.skip
                 )
-            ).fold(
-                onSuccess = { results ->
-                    _scrollState.value = UiState.Idle
-                    _state.value = _state.value.copy(
-                        skip = _state.value.skip + results.products.size
-                    )
-                    productsList = productsList?.plus(results.products)
-                    updateUiState { ProductsUiState.Success(productsList ?: emptyList()) }
-                },
-                onFailure = {
-                    _scrollState.value = UiState.Idle
-                }
-            )
+            ).onEach { result ->
+                result.fold(
+                    onSuccess = { results ->
+                        _scrollState.value = UiState.Idle
+                        _state.value = _state.value.copy(
+                            skip = _state.value.skip + results.products.size
+                        )
+                        productsList = productsList?.plus(results.products) ?: results.products
+                        updateUiState { ProductsUiState.Success(productsList ?: emptyList()) }
+                    },
+                    onFailure = {
+                        _scrollState.value = UiState.Idle
+                    }
+                )
+            }.launchIn(this)
         }
     }
 
-    fun refreshProducts() = loadInitialProducts()
+    fun refreshProducts() = loadProducts()
 }

@@ -1,8 +1,6 @@
 package dev.chirchir.data.settings
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -46,7 +44,6 @@ class SettingsRepositoryImpl(
         dataStore.edit { preferences ->
             preferences[LANGUAGE_KEY] = languageCode
         }
-        // updateAppLocale(languageCode)
         return Response.Success(true)
     }
 
@@ -58,10 +55,5 @@ class SettingsRepositoryImpl(
             .catch { exception ->
                 emit(Response.Failure(Exception("Failed to read language preference", exception)))
             }
-    }
-
-    private fun updateAppLocale(languageCode: String) {
-        val localeList = LocaleListCompat.forLanguageTags(languageCode)
-        AppCompatDelegate.setApplicationLocales(localeList)
     }
 }

@@ -1,11 +1,9 @@
 package dev.chirchir.data.products.datasource.local
 
 import android.content.Context
-import androidx.databinding.adapters.Converters
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dev.chirchir.data.products.datasource.local.dao.ProductDao
 import dev.chirchir.data.products.datasource.local.entity.ProductEntity
@@ -15,7 +13,6 @@ import dev.chirchir.data.products.datasource.local.entity.ProductEntity
     version = 1,
     exportSchema = true
 )
-@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 

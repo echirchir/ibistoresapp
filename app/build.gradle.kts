@@ -73,6 +73,8 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.koin.junit)
 
+    implementation(libs.room.database)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
