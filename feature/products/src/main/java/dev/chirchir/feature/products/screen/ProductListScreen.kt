@@ -168,6 +168,7 @@ private fun Success(
             }, sheetState = sheetState
         ) {
             ProductFilterSheet(
+                state.filterOption,
                 onApplyFilter = {
                     showFilterDialog = false
                     onApplyFilter(it)

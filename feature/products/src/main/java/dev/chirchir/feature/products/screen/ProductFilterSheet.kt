@@ -32,9 +32,10 @@ enum class FilterOption {
 
 @Composable
 internal fun ProductFilterSheet(
+    option: FilterOption = FilterOption.NONE,
     onApplyFilter: (selectedOption: FilterOption) -> Unit
 ) {
-    var selectedOption by remember { mutableStateOf(FilterOption.NONE) }
+    var selectedOption by remember { mutableStateOf(option) }
 
     Column(
         modifier = Modifier
