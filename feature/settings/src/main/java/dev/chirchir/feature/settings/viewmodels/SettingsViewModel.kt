@@ -1,6 +1,12 @@
 package dev.chirchir.feature.settings.viewmodels
 
 import android.app.Application
+import android.app.LocaleManager
+import android.content.Context
+import android.os.Build
+import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import dev.chirchir.core.ui.base.BaseViewModel
 import dev.chirchir.core.ui.base.UiEvent
 import dev.chirchir.core.ui.base.UiState
@@ -77,11 +83,22 @@ class SettingsViewModel(
         }
     }
 
-    fun toggleLanguage() {
+    fun toggleLanguage(context: Context) {
         safeLaunch {
             val newLanguage = if (settingsUiState.value.isHebrewLanguage) "en" else "he"
+            updateLocale(context, newLanguage)
             _settingsUiState.value = _settingsUiState.value.copy(isHebrewLanguage = !settingsUiState.value.isHebrewLanguage)
             setLanguageUseCase.execute(newLanguage)
+        }
+    }
+
+    private fun updateLocale(context: Context, newLanguage: String) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val localeL: LocaleList = LocaleList.forLanguageTags(newLanguage)
+            context.getSystemService(LocaleManager::class.java).applicationLocales = localeL
+        } else {
+            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(newLanguage)
+            AppCompatDelegate.setApplicationLocales(appLocale)
         }
     }
 }

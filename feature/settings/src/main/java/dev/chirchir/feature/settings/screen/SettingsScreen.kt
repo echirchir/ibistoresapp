@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -40,6 +41,7 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
     onSignOut: () -> Unit
 ) {
+    val context = LocalContext.current
     val state by viewModel.settingsUiState.collectAsState()
 
     ScreenLayout(
@@ -74,7 +76,7 @@ internal fun SettingsScreen(
                     isHebrewLanguage = state.isHebrewLanguage,
                     onLanguageSelected = { isHebrew ->
                         if (isHebrew != state.isHebrewLanguage) {
-                            viewModel.toggleLanguage()
+                            viewModel.toggleLanguage(context)
                         }
                     }
                 )
