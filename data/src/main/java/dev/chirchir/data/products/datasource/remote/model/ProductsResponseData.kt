@@ -12,148 +12,150 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductsResponseData(
     @SerialName("products")
-    val products: List<ProductResponseData>,
+    val products: List<ProductResponseData>? = null,
     @SerialName("total")
-    val total: Int,
+    val total: Int = 0,
     @SerialName("skip")
-    val skip: Int,
+    val skip: Int = 0,
     @SerialName("limit")
-    val limit: Int
+    val limit: Int = 0
 )
 
 @Serializable
 data class ProductResponseData(
     @SerialName("id")
-    val id: Int,
+    val id: Int? = 0,
     @SerialName("title")
-    val title: String,
+    val title: String? = "",
     @SerialName("description")
-    val description: String,
+    val description: String? = "",
     @SerialName("category")
-    val category: String,
+    val category: String? = "",
     @SerialName("price")
-    val price: Double,
+    val price: Double? = 0.0,
     @SerialName("discountPercentage")
-    val discountPercentage: Double,
+    val discountPercentage: Double? = 0.0,
     @SerialName("rating")
-    val rating: Double,
+    val rating: Double? = 0.0,
     @SerialName("stock")
-    val stock: Int,
+    val stock: Int? = 0,
     @SerialName("tags")
-    val tags: List<String>,
+    val tags: List<String> = emptyList(),
     @SerialName("brand")
     val brand: String? = null,
     @SerialName("sku")
-    val sku: String,
+    val sku: String? = "",
     @SerialName("weight")
-    val weight: Int,
+    val weight: Int? = 0,
     @SerialName("dimensions")
-    val dimensions: DimensionsData,
+    val dimensions: DimensionsData? = null,
     @SerialName("warrantyInformation")
-    val warrantyInformation: String,
+    val warrantyInformation: String? = "",
     @SerialName("shippingInformation")
-    val shippingInformation: String,
+    val shippingInformation: String? = "",
     @SerialName("availabilityStatus")
-    val availabilityStatus: String,
+    val availabilityStatus: String? = "",
     @SerialName("reviews")
-    val reviews: List<ReviewData>,
+    val reviews: List<ReviewData> = emptyList(),
     @SerialName("returnPolicy")
-    val returnPolicy: String,
+    val returnPolicy: String? = "",
     @SerialName("minimumOrderQuantity")
-    val minimumOrderQuantity: Int,
+    val minimumOrderQuantity: Int? = 0,
     @SerialName("meta")
-    val meta: MetaData,
+    val meta: MetaData? = null,
     @SerialName("images")
-    val images: List<String>,
+    val images: List<String> = emptyList(),
     @SerialName("thumbnail")
-    val thumbnail: String,
+    val thumbnail: String? = "",
 )
 
 @Serializable
 data class DimensionsData(
     @SerialName("width")
-    val width: Double,
+    val width: Double? = 0.0,
     @SerialName("height")
-    val height: Double,
+    val height: Double? = 0.0,
     @SerialName("depth")
-    val depth: Double
+    val depth: Double? = 0.0
 )
 
 @Serializable
 data class MetaData(
     @SerialName("createdAt")
-    val createdAt: String,
+    val createdAt: String? = "",
     @SerialName("updatedAt")
-    val updatedAt: String,
+    val updatedAt: String? = "",
     @SerialName("barcode")
-    val barcode: String,
+    val barcode: String? = "",
     @SerialName("qrCode")
-    val qrCode: String
+    val qrCode: String? = ""
 )
 
 @Serializable
 data class ReviewData(
     @SerialName("rating")
-    val rating: Int,
+    val rating: Int? = 0,
     @SerialName("comment")
-    val comment: String,
+    val comment: String? = "",
     @SerialName("date")
-    val date: String,
+    val date: String? = "",
     @SerialName("reviewerName")
-    val reviewerName: String,
+    val reviewerName: String? = "",
     @SerialName("reviewerEmail")
-    val reviewerEmail: String
+    val reviewerEmail: String? = ""
 )
 
-internal fun ProductsResponseData.toDomain() = ProductsResponse(
-    products = products.map { it.toDomain() },
-    total = total,
-    skip = skip,
-    limit = limit
-)
+internal fun ProductsResponseData.toDomain(): ProductsResponse {
+    return ProductsResponse(
+        products = products?.mapNotNull { it.toDomain() }.orEmpty(),
+        total = total,
+        skip = skip,
+        limit = limit
+    )
+}
 
 internal fun ProductResponseData.toDomain() = Product(
-    id = id,
-    title = title,
-    description = description,
-    category = category,
-    price = price,
-    discountPercentage = discountPercentage,
-    rating = rating,
-    stock = stock,
+    id = id ?: 0,
+    title = title ?: "",
+    description = description ?: "",
+    category = category ?: "",
+    price = price ?: 0.0,
+    discountPercentage = discountPercentage ?: 0.0,
+    rating = rating ?: 0.0,
+    stock = stock ?: 0,
     tags = tags,
     brand = brand,
-    sku = sku,
-    weight = weight,
-    dimensions = dimensions.toDomain(),
-    warrantyInformation = warrantyInformation,
-    shippingInformation = shippingInformation,
-    availabilityStatus = availabilityStatus,
+    sku = sku ?: "",
+    weight = weight ?: 0,
+    dimensions = dimensions?.toDomain(),
+    warrantyInformation = warrantyInformation ?: "",
+    shippingInformation = shippingInformation ?: "",
+    availabilityStatus = availabilityStatus ?: "",
     reviews = reviews.map { it.toDomain() },
-    returnPolicy = returnPolicy,
-    minimumOrderQuantity = minimumOrderQuantity,
-    meta = meta.toDomain(),
+    returnPolicy = returnPolicy ?: "",
+    minimumOrderQuantity = minimumOrderQuantity ?: 0,
+    meta = meta?.toDomain(),
     images = images,
-    thumbnail = thumbnail
+    thumbnail = thumbnail ?: ""
 )
 
 internal fun DimensionsData.toDomain() = Dimensions(
-    width = width,
-    height = height,
-    depth = depth
+    width = width ?: 0.0,
+    height = height ?: 0.0,
+    depth = depth ?: 0.0
 )
 
 internal fun MetaData.toDomain() = Meta(
-    createdAt = createdAt,
-    updatedAt = updatedAt,
-    barcode = barcode,
-    qrCode = qrCode
+    createdAt = createdAt ?: "",
+    updatedAt = updatedAt ?: "",
+    barcode = barcode ?: "",
+    qrCode = qrCode ?: ""
 )
 
 internal fun ReviewData.toDomain() = Review(
-    rating = rating,
-    comment = comment,
-    date = date,
-    reviewerName = reviewerName,
-    reviewerEmail = reviewerEmail
+    rating = rating ?: 0,
+    comment = comment ?: "",
+    date = date ?: "",
+    reviewerName = reviewerName ?: "",
+    reviewerEmail = reviewerEmail ?: ""
 )
