@@ -27,6 +27,9 @@ internal class ProductsViewModel(
     val scrollState = _scrollState.asStateFlow()
 
     private var productsList: List<Product>? = null
+    private var totalProducts = 0
+    private var limit = 50
+    private var skip = 0
 
     init {
         loadProducts()
@@ -67,7 +70,7 @@ internal class ProductsViewModel(
 
     private fun loadProducts() = safeLaunch {
         updateUiState { ProductsUiState.Loading }
-        getProductsUseCase.execute(PaginationModel(limit = state.value.limit, skip = state.value.skip))
+        getProductsUseCase.execute(PaginationModel(limit = limit, skip = skip))
             .onEach { result ->
                 result.fold(
                     onSuccess = { results ->
@@ -76,11 +79,8 @@ internal class ProductsViewModel(
                         } else {
                             updateUiState { ProductsUiState.Success(results.products) }
                             productsList = results.products
-                            _state.value = _state.value.copy(
-                                totalProducts = results.total,
-                                skip = results.skip,
-                                limit = results.limit
-                            )
+                            totalProducts = results.total
+                            skip = results.products.size
                         }
                     },
                     onFailure = { error ->
@@ -92,23 +92,24 @@ internal class ProductsViewModel(
     }
 
     private fun loadMoreProducts() = safeLaunch {
-        val hasMoreProducts = state.value.totalProducts > (productsList?.size ?: 0)
+        val hasMoreProducts = totalProducts > (productsList?.size ?: 0)
         if (hasMoreProducts) {
             _scrollState.value = UiState.Loading
 
             getProductsUseCase.execute(
                 PaginationModel(
-                    limit = state.value.limit,
-                    skip = _state.value.skip
+                    limit = limit,
+                    skip = productsList?.size ?: 0
                 )
             ).onEach { result ->
                 result.fold(
                     onSuccess = { results ->
                         _scrollState.value = UiState.Idle
-                        _state.value = _state.value.copy(
-                            skip = _state.value.skip + results.products.size
-                        )
-                        productsList = productsList?.plus(results.products) ?: emptyList()
+                        skip += results.products.size
+
+                        productsList = (productsList.orEmpty() + results.products)
+                            .distinctBy { it.id }
+
                         updateUiState { ProductsUiState.Success(productsList ?: emptyList()) }
                     },
                     onFailure = {

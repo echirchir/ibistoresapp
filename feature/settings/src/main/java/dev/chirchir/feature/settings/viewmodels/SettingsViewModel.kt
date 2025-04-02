@@ -1,11 +1,6 @@
 package dev.chirchir.feature.settings.viewmodels
 
 import android.app.Application
-import android.app.LocaleManager
-import android.os.Build
-import android.os.LocaleList
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import dev.chirchir.core.ui.base.BaseViewModel
 import dev.chirchir.core.ui.base.UiEvent
 import dev.chirchir.core.ui.base.UiState
@@ -74,14 +69,6 @@ class SettingsViewModel(
         }
     }
 
-    private fun updateLocale(lang: String) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            application.applicationContext.getSystemService(LocaleManager::class.java).applicationLocales = LocaleList.forLanguageTags(lang)
-        } else {
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(lang))
-        }
-    }
-
     fun toggleTheme() {
         safeLaunch {
             val newValue = !settingsUiState.value.isDarkMode
@@ -93,7 +80,6 @@ class SettingsViewModel(
     fun toggleLanguage() {
         safeLaunch {
             val newLanguage = if (settingsUiState.value.isHebrewLanguage) "en" else "he"
-            updateLocale(newLanguage)
             _settingsUiState.value = _settingsUiState.value.copy(isHebrewLanguage = !settingsUiState.value.isHebrewLanguage)
             setLanguageUseCase.execute(newLanguage)
         }

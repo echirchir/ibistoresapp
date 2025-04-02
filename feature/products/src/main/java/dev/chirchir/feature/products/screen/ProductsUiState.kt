@@ -23,5 +23,7 @@ internal class ProductsState {
         val totalProducts: Int = 0,
         val limit: Int = 50,
         val skip: Int = 0
-    )
+    ) {
+        internal fun canReload() = searchText.isEmpty()
+    }
 }

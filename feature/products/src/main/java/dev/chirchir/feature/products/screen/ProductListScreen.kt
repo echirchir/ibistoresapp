@@ -153,7 +153,7 @@ private fun Success(
         modifier = Modifier.padding(horizontal = 20.dp)
     ) {
         items(products.size) { index ->
-            if(index >= products.size - 1) {
+            if(index >= products.size - 1 && viewModel.state.value.canReload()) {
                 LaunchedEffect(index) {
                     viewModel.handleEvent(ProductsState.Event.LoadMore)
                 }
